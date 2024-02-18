@@ -210,7 +210,7 @@ class AVLNode(object):
 
 	def update(self):
 		self.update_height_from_children()
-		#self.update_size_from_children()
+		self.update_size_from_children()
 		self.update_BF()
 
 
@@ -664,7 +664,7 @@ class AVLTree(object):
 	dictionary larger than node.key.
 	"""
 	def split(self, node):
-		# store the minimum of the larger keys
+		#  minimum of the larger keys
 		larger_min = self.successor(node)
 		if larger_min == None:
 			self.delete(node)
@@ -681,8 +681,8 @@ class AVLTree(object):
 			# node, then join t1 with the left subtree of the node's parent,
 			# with the key and value of the parent in between
 			if parent.get_key() < node.get_key():
-				# Deal with the case that t1 is empty
-				if t1.get_root().get_key() == None:
+				# in case that t1 is empty
+				if t1.get_root().get_key() is None:
 					if parent.get_left().is_real_node():
 						parent.get_left().set_parent(None)
 						t1 = AVLTree(parent.get_left())
@@ -697,7 +697,7 @@ class AVLTree(object):
 			# node, then join t2 with the right subtree of the node's parent,
 			# with the key and value of the parent in between
 			else:
-				# Deal with the case that t2 is empty
+				# the case that t2 is empty
 				if t2.get_root().get_key() == None:
 					if parent.get_right().is_real_node():
 						parent.get_right().set_parent(None)
@@ -731,13 +731,10 @@ class AVLTree(object):
 		# create the separating node
 		separator = AVLNode(key, val)
 
-		# verify the root fields have correct values
-		# self.get_root().update_height_from_children()
-		# self.get_root().update_size_from_children()
-		# self.get_root().update_BF()
-		# tree2.get_root().update_height_from_children()
-		# tree2.get_root().update_size_from_children()
-		# tree2.get_root().update_BF()
+		# update fileds
+		self.get_root().update()
+		tree2.get_root().update()
+		
 		
 		# compute height difference to find which tree is taller
 		height_difference = self.get_root().get_height() - tree2.get_root().get_height()
@@ -752,7 +749,7 @@ class AVLTree(object):
 
 		# fix the tree if needed in order to preserve AVL qualities
 		self.deletion_rebalance_tree(separator)
-		return abs(height_difference)
+		return abs(height_difference) + 1
 
 
 	"""join self with seperator node and another AVL tree"""
@@ -762,23 +759,18 @@ class AVLTree(object):
 			taller = self
 			shorter = tree
 		else:
-			# the tree is taller than self, we do the same operations as before
+			# the tree is taller than self
 			taller = tree
 			shorter = self
 
-		# connect the separator node to the node we found,
-		# by changing the correct pointers
+		# connect the separator node to the right place, by changing the correct pointers
 		if taller.get_root().get_key() > separator.get_key():
-			# find the node in left sub-tree of self which his height
-			# is equal to tree height
+			# find the node in left sub-tree of self who's height is equal to tree2's height
 			node_to_join = taller.node_at_height(shorter.get_root().get_height(), "left")
-			# all the taller nodes are greater than the separator node
 			taller.left_connection(shorter, separator, node_to_join)
 		else:
-			# find the node in right sub-tree of self which his height
-			# is equal to tree height
+			# find the node in right sub-tree of self who's height is equal to tree2's height
 			node_to_join = taller.node_at_height(shorter.get_root().get_height(), "right")
-			# all the taller nodes are smaller than the separator node
 			taller.right_connection(shorter, separator, node_to_join)
 
 		shorter.get_root().set_parent(separator)
@@ -788,6 +780,7 @@ class AVLTree(object):
 		the node in the left sub-tree of the taller tree, and his right
 		child is the root of the shorter tree"""
 	def left_connection(self, shorter, separator, node_to_join):
+		#changing pointers
 		separator.set_right(node_to_join)
 		separator.set_parent(node_to_join.get_parent())
 		node_to_join.get_parent().set_left(separator)
@@ -795,15 +788,14 @@ class AVLTree(object):
 		separator.set_left(shorter.get_root())
 
 		#update separator fields
-		separator.update_height_from_children()
-		separator.update_size_from_children()
-		separator.update_BF()
+		separator.update()
 		
 
 	"""connect the separator to trees, so that his right child is 
 		the node in the left sub-tree of the taller tree, and his left
 		child is the root of the shorter tree"""
 	def right_connection(self, shorter, separator, node_to_join):
+		#changing pointers
 		separator.set_left(node_to_join)
 		separator.set_parent(node_to_join.get_parent())
 		node_to_join.get_parent().set_right(separator)
@@ -812,14 +804,11 @@ class AVLTree(object):
 
 
 		#update separator fields
-		separator.update_height_from_children()
-		separator.update_size_from_children()
-		separator.update_BF()
+		separator.update()
 
 	"""connect self and AVL tree with a separating node as their root"""
 	def connect_roots(self, tree, separator):
-		# the trees height is equal so we just need to connect
-		# the separating node to their roots
+		# join the trees by connecting them to the seperator as suns
 		if separator.get_key() > self.get_root().get_key():
 			separator.set_left(self.get_root())
 			separator.set_right(tree.get_root())
