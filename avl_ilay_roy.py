@@ -808,12 +808,13 @@ class AVLTree(object):
 	def set_root(self, node):
 		self.root = node
 
-	
+	# helper function for updating size of ancestors by adding 1 to their size, after insertion of new node to the tree
 	def increment_size_to_root(self, node_to_start):
 		while node_to_start != None:
 			node_to_start.set_size(node_to_start.get_size() + 1)
 			node_to_start = node_to_start.get_parent()
 
+	# helper function for updating size of ancestors by subtracting 1 from their size, after deletion of node from the tree
 	def decrement_size_to_root(self, node_to_start):
 		while node_to_start != None:
 			node_to_start.set_size(node_to_start.get_size() - 1)
