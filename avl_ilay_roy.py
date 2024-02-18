@@ -423,9 +423,6 @@ class AVLTree(object):
 		# get parent of physically deleted  node from the tree, and fix all the pointers
 		p = self.BST_delete(node)
 
-		# get parent of deleted node to start rebalancing process
-		# p = deleted_node.get_parent()
-
 		# fix the tree if needed in order to preserve AVL qualities
 		# returns the number of rotations and/or height changes needed
 		balance_actions = self.deletion_rebalance_tree(p)
@@ -511,49 +508,11 @@ class AVLTree(object):
 			if parent.get_key() == node.get_key():
 				parent = parentOriginal
 
-			# update the fields of the replacement node
-			# successor.update()
-
 		# update the size of ancestors
 		self.decrement_size_to_root(parent)
 
 		return parent
 			
-
-			# self.BST_delete(replacement_node)
-			# parent = node.get_parent()
-
-			# if parent.get_left().get_key() == node.get_key():
-			# 	parent.set_left(replacement_node)
-			# else:
-			# 	parent.set_right(replacement_node)
-
-			# replacement_node.set_parent(parent)
-			# replacement_node.set_left(node.get_left())
-			# replacement_node.set_right(node.get_right())
-			# node.get_left().set_parent(replacement_node)
-			# node.get_right().set_parent(replacement_node)
-
-			# update the fields of the replacement node
-			# replacement_node.update_size_from_children()
-			# replacement_node.update_height_from_children()
-			# replacement_node.update_BF()
-			# p = replacement_node.get_parent()
-			# update the fields of ancestors
-			# while (p != None):
-			# 	p.update_size_from_children()
-			# 	p.update_height_from_children()
-			# 	p.update_BF()
-			# 	p = p.get_parent()
-		
-		# # update the fields of the ancestors
-		# while (parent != None):
-		# 	parent.update_size_from_children()
-		# 	parent.update_height_from_children()
-		# 	parent.update_BF()
-		# 	parent = parent.get_parent()
-
-		# return node
 
 	def BST_root_delete(self):
 		root = self.get_root()
